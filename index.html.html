@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardtekk Bunker - ID Manager</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ff0055;
+        }
+        h2 {
+            text-align: center;
+            color: #ff0055;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaaaaa;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333;
+            background-color: #2a2a2a;
+            color: white;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #ff0055;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff0055;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #cc0044;
+        }
+        #status {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success { color: #00ff66; }
+        .error { color: #ff3333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ID Manager Dashboard</h2>
+    <div class="form-group">
+        <label for="artist">Künstler / DJ</label>
+        <input type="text" id="artist" placeholder="z.B. Nogge, Komacasper...">
+    </div>
+    <div class="form-group">
+        <label for="title">Songtitel</label>
+        <input type="text" id="title" placeholder="z.B. Tekk-Gewitter">
+    </div>
+    <div class="form-group">
+        <label for="audioId">Roblox Audio ID</label>
+        <input type="text" id="audioId" placeholder="z.B. 183749201">
+    </div>
+    <div class="form-group">
+        <label for="password">Manager Passwort</label>
+        <input type="password" id="password" placeholder="Euer geheimes Passwort">
+    </div>
+    <button onclick="uploadSong()">Track hochladen</button>
+    <div id="status"></div>
+</div>
+
+<script>
+    // Diese URLs füllen wir gleich aus, sobald die Datenbank steht!
+    const SUPABASE_URL = "DEIN_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY";
+    const MANAGER_PASSWORD = "DEIN_WUNSCH_PASSWORT"; // Leg hier dein Passwort fest
+
+    async function uploadSong() {
+        const artist = document.getElementById('artist').value;
+        const title = document.getElementById('title').value;
+        const audioId = document.getElementById('audioId').value;
+        const password = document.getElementById('password').value;
+        const statusDiv = document.getElementById('status');
+
+        if (!artist || !title || !audioId || !password) {
+            statusDiv.className = "error";
+            statusDiv.innerText = "Bitte alle Felder ausfüllen!";
+            return;
+        }
+
+        if (password !== MANAGER_PASSWORD) {
+            statusDiv.className = "error";
+            statusDiv.innerText = "Falsches Manager Passwort!";
+            return;
+        }
+
+        statusDiv.className = "";
+        statusDiv.innerText = "Wird hochgeladen...";
+
+        // Daten an Supabase senden
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/playlist`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                    artist: artist,
+                    title: title,
+                    audio_id: audioId
+                })
+            });
+
+            if (response.ok) {
+                statusDiv.className = "success";
+                statusDiv.innerText = "Erfolgreich! Track ist live im Spiel.";
+                // Felder leeren
+                document.getElementById('artist').value = '';
+                document.getElementById('title').value = '';
+                document.getElementById('audioId').value = '';
+            } else {
+                statusDiv.className = "error";
+                statusDiv.innerText = "Fehler beim Hochladen.";
+            }
+        } catch (error) {
+            statusDiv.className = "error";
+            statusDiv.innerText = "Verbindungsfehler zur Datenbank.";
+        }
+    }
+</script>
+
+</body>
+</html>
