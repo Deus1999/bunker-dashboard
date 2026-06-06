@@ -32,26 +32,45 @@
             min-height: 100vh;
         }
 
-        /* --- LOGIN WAND --- */
-        #login-screen {
-            display: flex;
-            flex-direction: column;
+        /* --- LOGIN POP-UP (MODAL) --- */
+        #login-modal {
+            display: none; /* Standardmäßig versteckt */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Dunkler Hintergrund */
+            backdrop-filter: blur(5px);
             justify-content: center;
             align-items: center;
-            width: 100%;
-            height: 100vh;
-            background: radial-gradient(circle at center, #1a000a 0%, var(--bg-main) 100%);
         }
         .login-box {
             background-color: var(--bg-card);
             padding: 40px;
             border-radius: 16px;
             border: 1px solid #333;
-            box-shadow: 0 0 30px rgba(255, 0, 85, 0.1);
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
             width: 100%;
             max-width: 350px;
             text-align: center;
+            position: relative;
+            animation: popIn 0.3s ease-out;
         }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: white; }
+
         .login-box h1 {
             color: var(--neon-pink);
             text-transform: uppercase;
@@ -71,10 +90,8 @@
             font-size: 16px;
             transition: border 0.3s;
         }
-        .input-field:focus {
-            border-color: var(--neon-pink);
-            outline: none;
-        }
+        .input-field:focus { border-color: var(--neon-pink); outline: none; }
+        
         .btn-main {
             width: 100%;
             padding: 14px;
@@ -89,15 +106,12 @@
             letter-spacing: 1px;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .btn-main:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 0, 85, 0.4);
-        }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 0, 85, 0.4); }
         #login-error { color: #ff3333; margin-top: 15px; font-weight: bold; min-height: 20px;}
 
         /* --- HAUPT APP --- */
         #app-screen {
-            display: none;
+            display: block; /* Jetzt für alle sichtbar */
             width: 100%;
             max-width: 1100px;
             padding: 20px;
@@ -169,7 +183,8 @@
         tr:hover { background-color: #1a1a1a; }
         .id-badge { background: #000; padding: 4px 8px; border-radius: 4px; font-family: monospace; color: var(--neon-blue); border: 1px solid #333;}
         
-        .btn-small { background: #333; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-small { background: #333; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: background 0.2s;}
+        .btn-small:hover { background: #444; }
         .btn-small.danger:hover { background: var(--color-admin); }
 
         .role-owner { color: var(--color-owner); font-weight: bold; }
@@ -180,29 +195,35 @@
 </head>
 <body>
 
-    <!-- LOGIN -->
-    <div id="login-screen">
+    <!-- ================= LOGIN MODAL (POP-UP) ================= -->
+    <div id="login-modal">
         <div class="login-box">
-            <h1>Bunker Zentrale</h1>
+            <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+            <h1>Team Login</h1>
             <input type="text" id="login-username" class="input-field" placeholder="Benutzername">
             <input type="password" id="login-password" class="input-field" placeholder="Passwort">
-            <button class="btn-main" onclick="versucheLogin()">System Betreten</button>
+            <button class="btn-main" onclick="versucheLogin()">Einloggen</button>
             <div id="login-error"></div>
         </div>
     </div>
 
-    <!-- APP -->
+    <!-- ================= HAUPT APP (SICHTBAR) ================= -->
     <div id="app-screen">
         <nav>
             <div class="logo">Hardtekk Bunker</div>
             <div class="nav-tabs">
                 <button id="tab-home" class="active" onclick="switchTab('home')">Playlist</button>
-                <button id="tab-upload" onclick="switchTab('upload')">Track Upload</button>
+                <!-- Versteckt für normale Besucher -->
+                <button id="tab-upload" onclick="switchTab('upload')" style="display: none;">Track Upload</button>
                 <button id="tab-team" onclick="switchTab('team')" style="display: none; color: var(--neon-purple);">Team Verwaltung</button>
             </div>
-            <div class="user-badge" id="display-user"></div>
+            <!-- Hier steht der Login-Button für Gäste -->
+            <div class="user-badge" id="display-user">
+                <button class="btn-small" style="background: var(--neon-pink); font-weight: bold; padding: 6px 16px;" onclick="openLoginModal()">Team Login</button>
+            </div>
         </nav>
 
+        <!-- SEITE 1: PLAYLIST (Für alle sichtbar) -->
         <div id="page-home" class="page active card">
             <h2>🎵 Bunker Datenbank</h2>
             <table id="playlist-table">
@@ -211,6 +232,7 @@
             </table>
         </div>
 
+        <!-- SEITE 2: UPLOAD (Nur Team) -->
         <div id="page-upload" class="page card">
             <h2>⚡ Neuen Track einspeisen</h2>
             <input type="text" id="up-artist" class="input-field" placeholder="Künstler / DJ">
@@ -220,6 +242,7 @@
             <div id="upload-status" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
         </div>
 
+        <!-- SEITE 3: TEAM VERWALTUNG (Nur Owner/Admin) -->
         <div id="page-team" class="page card">
             <h2>👑 Team & Rollen Verwaltung</h2>
             <div style="background: #000; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #333;">
@@ -243,11 +266,18 @@
         </div>
     </div>
 
-    <!-- HIER IST DAS JAVASCRIPT! -->
+    <!-- ================= JAVASCRIPT ================= -->
     <script>
         const SUPABASE_URL = "https://xyzbjnxrhzdcxuuwfvuq.supabase.co";
         const SUPABASE_KEY = "sb_publishable_Kp5QnlVPRhgGm221Iz1b6Q_wHcdXmKH";
         let currentUser = null;
+
+        // Wenn die Seite lädt, zeige allen Gästen direkt die Playlist an!
+        window.onload = () => { ladePlaylist(); };
+
+        // Modal Steuerung
+        function openLoginModal() { document.getElementById('login-modal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
 
         function formatRole(role) {
             if (role === 'Owner') return '<span class="role-owner">👑 Owner</span>';
@@ -264,29 +294,55 @@
 
             if (!userIn || !passIn) return errorDiv.innerText = "Bitte Daten eingeben!";
             errorDiv.innerText = "Lade...";
+            errorDiv.style.color = "white";
 
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/team_users?username=eq.${userIn}&select=*`, {
                     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
+                
+                if (!res.ok) throw new Error("Netzwerkfehler");
                 const data = await res.json();
 
                 if (data.length === 0 || data[0].password !== passIn) {
+                    errorDiv.style.color = "#ff3333";
                     errorDiv.innerText = "Falscher Name oder Passwort!";
                 } else {
+                    // LOGIN ERFOLGREICH
                     currentUser = data[0];
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('app-screen').style.display = 'block';
-                    document.getElementById('display-user').innerHTML = `${formatRole(currentUser.role)} | <b>${currentUser.username}</b>`;
+                    closeLoginModal(); // Pop-up schließen
+                    
+                    // Oben rechts Name und Logout-Button anzeigen
+                    document.getElementById('display-user').innerHTML = `
+                        ${formatRole(currentUser.role)} | <b>${currentUser.username}</b> 
+                        <button class="btn-small danger" style="margin-left:10px;" onclick="logout()">Logout</button>
+                    `;
+                    
+                    // Geheime Tabs einblenden
+                    document.getElementById('tab-upload').style.display = 'inline-block';
                     if (currentUser.role === 'Owner' || currentUser.role === 'Admin') {
                         document.getElementById('tab-team').style.display = 'inline-block';
                         ladeTeam();
                     }
-                    ladePlaylist();
+                    
+                    // Felder im Login leeren für Sicherheit
+                    document.getElementById('login-username').value = '';
+                    document.getElementById('login-password').value = '';
+                    errorDiv.innerText = '';
                 }
             } catch (err) {
+                errorDiv.style.color = "#ff3333";
                 errorDiv.innerText = "Verbindungsfehler zur Datenbank.";
             }
+        }
+
+        function logout() {
+            currentUser = null;
+            // Alles wieder auf Gast-Modus setzen
+            document.getElementById('display-user').innerHTML = `<button class="btn-small" style="background: var(--neon-pink); font-weight: bold; padding: 6px 16px;" onclick="openLoginModal()">Team Login</button>`;
+            document.getElementById('tab-upload').style.display = 'none';
+            document.getElementById('tab-team').style.display = 'none';
+            switchTab('home'); // Zurück zur Startseite werfen
         }
 
         function switchTab(tabId) {
@@ -311,6 +367,7 @@
         }
 
         async function uploadTrack() {
+            if (!currentUser) return; // Nur zur Sicherheit, falls ein Gast es versucht
             const artist = document.getElementById('up-artist').value;
             const title = document.getElementById('up-title').value;
             const audioId = document.getElementById('up-id').value;
