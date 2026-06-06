@@ -10,7 +10,6 @@
             --bg-card: #0a0a0a;
             --bg-input: #0f0f0f;
             --tekk-yellow: #ffcc00;
-            --tekk-pink: #d3005a;
             --tekk-purple: #8a00b0;
             --border-color: #1a1a1a;
             --text-main: #ffffff;
@@ -115,20 +114,24 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
-            padding: 10px 16px;
+            padding: 10px 14px;
             transition: color 0.2s;
+            border-bottom: 2px solid transparent;
         }
         .nav-tabs button:hover, .nav-tabs button.active {
             color: var(--tekk-yellow);
             border-bottom: 2px solid var(--tekk-yellow);
         }
 
-        /* Titelzeile */
+        /* Seiten-Umschaltung */
+        .page { display: none; }
+        .page.active { display: block; }
+
         .page-title {
             font-size: 32px;
             font-weight: 900;
@@ -144,7 +147,7 @@
             margin: 0 0 30px 0;
         }
 
-        /* Grid System für die oberen Kacheln */
+        /* Grid System */
         .top-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -168,13 +171,9 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             color: #aaa;
         }
 
-        /* Eingabefelder im neuen Look */
         .input-field {
             width: 100%;
             padding: 14px;
@@ -186,19 +185,11 @@
             font-size: 14px;
             margin-bottom: 15px;
         }
-        .input-field:focus {
-            border-color: #333;
-            outline: none;
-        }
+        .input-field:focus { border-color: #333; outline: none; }
         .input-field::placeholder { color: #333; }
 
-        /* Reihe für zwei Input-Felder nebeneinander */
-        .input-row {
-            display: flex;
-            gap: 15px;
-        }
+        .input-row { display: flex; gap: 15px; }
 
-        /* Die fetten gelben Knöpfe */
         .btn-yellow {
             width: 100%;
             padding: 14px;
@@ -212,14 +203,8 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2);
-            transition: transform 0.1s, box-shadow 0.2s;
-        }
-        .btn-yellow:hover {
-            box-shadow: 0 4px 20px rgba(255, 204, 0, 0.4);
-            transform: translateY(-1px);
         }
 
-        /* API Bereich links */
         .api-box {
             display: flex;
             background-color: var(--bg-input);
@@ -230,27 +215,20 @@
             justify-content: space-between;
             margin-bottom: 15px;
         }
-        .api-url-text {
-            color: var(--tekk-yellow);
-            font-family: monospace;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        .api-url-text { color: var(--tekk-yellow); font-family: monospace; font-size: 14px; font-weight: bold; }
+        
         .btn-outline {
             background: none;
             border: 1px solid #222;
-            color: var(--text-light);
+            color: white;
             padding: 8px 14px;
             border-radius: 4px;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .btn-outline:hover { background-color: #111; border-color: #444; }
 
-        /* --- UNTERER BEREICH: SONGS TABELLE --- */
         .table-section-header {
             display: flex;
             justify-content: space-between;
@@ -277,11 +255,7 @@
             border: 1px solid #473b00;
         }
 
-        /* Filter-Reihe oben rechts über Tabelle */
-        .filter-area {
-            display: flex;
-            gap: 10px;
-        }
+        .filter-area { display: flex; gap: 10px; }
         .search-input {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -300,11 +274,7 @@
             font-size: 13px;
         }
 
-        /* Die Song-Liste Tabelle */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; }
         th {
             color: var(--text-muted);
             text-transform: uppercase;
@@ -315,21 +285,10 @@
             border-bottom: 1px solid var(--border-color);
             text-align: left;
         }
-        td {
-            padding: 16px 10px;
-            font-size: 14px;
-            border-bottom: 1px solid #0a0a0a;
-            color: #aaa;
-        }
-        tr:hover td {
-            background-color: #050505;
-            color: white;
-        }
-        .song-id-column {
-            font-family: monospace;
-            color: #777;
-        }
-        /* Die grauen Kategorie-Pillen aus dem Screenshot */
+        td { padding: 16px 10px; font-size: 14px; border-bottom: 1px solid #0a0a0a; color: #aaa; }
+        tr:hover td { background-color: #050505; color: white; }
+        
+        .id-badge { font-family: monospace; color: #777; }
         .category-badge {
             background-color: #141414;
             color: #888;
@@ -342,11 +301,14 @@
         .user-btn-badge {
             background-color: #111;
             border: 1px solid #222;
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-size: 12px;
             cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
         }
+        #login-error { color: #ff3333; margin-top: 15px; font-weight: bold; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -369,118 +331,118 @@
                 <div class="logo-title">Hardtekk Bunker</div>
             </div>
             <div class="nav-tabs">
-                <button id="tab-home" class="active" onclick="switchTab('home')">🔊 DJ Console</button>
-                <button id="tab-upload" onclick="switchTab('upload')" style="display: none;">🎵 Audio Manager</button>
-                <button id="tab-team" onclick="switchTab('team')" style="display: none; color: var(--tekk-purple);">👑 Benutzer</button>
+                <button id="tab-home" class="active" onclick="switchTab('home')">🎧 DJ Console</button>
+                <button id="tab-upload" onclick="switchTab('upload')">🎵 Audio Manager</button>
+                <button id="tab-categories" onclick="switchTab('categories')">🗂️ Kategorien</button>
+                <button id="tab-team" onclick="switchTab('team')">👤 Benutzer</button>
+                <button id="tab-api" onclick="switchTab('api')">🌐 Roblox API</button>
+                <button id="tab-playlist" onclick="switchTab('playlist')">📜 Playlist</button>
             </div>
             <div id="display-user">
                 <button class="user-btn-badge" style="color: var(--tekk-yellow); border-color: #382d00;" onclick="openLoginModal()">🔑 Login</button>
             </div>
         </nav>
 
-        <h1 class="page-title">Roblox Audio Manager</h1>
-        <p class="page-subtitle">Verwalte deine Song-IDs und nutze die API in Roblox.</p>
+        <div id="page-home" class="page active">
+            <h1 class="page-title">Roblox Audio Manager</h1>
+            <p class="page-subtitle">Verwalte deine Song-IDs und nutze die API in Roblox.</p>
 
-        <div class="top-grid">
-            <div class="card">
-                <div class="card-header">🟡 Roblox API URL</div>
-                <div class="api-box">
-                    <span class="api-url-text">/api/roblox/songs</span>
-                    <button class="btn-outline">📋 Kopieren</button>
+            <div class="top-grid">
+                <div class="card">
+                    <div class="card-header">🟡 Roblox API URL</div>
+                    <div class="api-box">
+                        <span class="api-url-text">/api/roblox/songs</span>
+                        <button class="btn-outline">📋 Kopieren</button>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-outline" style="flex:1;">👁️ JSON Vorschau</button>
+                        <button class="btn-outline" style="flex:1;">⚡ API Testen</button>
+                    </div>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-outline" style="flex:1;">👁️ JSON Vorschau</button>
-                    <button class="btn-outline" style="flex:1;">⚡ API Testen</button>
-                </div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">➕ Song hinzufügen</div>
-                <div id="upload-form-container">
-                    <p id="guest-info-text" style="color: var(--text-muted); font-size: 13px; margin: 0 0 15px 0;">Logge dich oben ein, um neue Musik in die Datenbank einzuspeisen.</p>
-                    <div id="secret-upload-fields" style="display: none;">
-                        <input type="text" id="up-artist" class="input-field" placeholder="Künstlername (z.B. Nogge)">
-                        <div class="input-row">
-                            <input type="text" id="up-title" class="input-field" placeholder="Songtitel">
-                            <input type="text" id="up-id" class="input-field" placeholder="Roblox Audio ID">
+                <div class="card">
+                    <div class="card-header">➕ Song hinzufügen</div>
+                    <div id="upload-form-container">
+                        <p id="guest-info-text" style="color: var(--text-muted); font-size: 13px; margin: 0 0 15px 0;">Logge dich oben ein, um neue Musik in die Datenbank einzuspeisen.</p>
+                        <div id="secret-upload-fields" style="display: none;">
+                            <input type="text" id="up-artist" class="input-field" placeholder="Künstlername (z.B. Nogge)">
+                            <div class="input-row">
+                                <input type="text" id="up-title" class="input-field" placeholder="Songtitel">
+                                <input type="text" id="up-id" class="input-field" placeholder="Roblox Audio ID">
+                            </div>
+                            <button class="btn-yellow" onclick="uploadTrack()">➕ Song hinzufügen</button>
+                            <div id="upload-status" style="margin-top: 10px; font-size: 13px; font-weight: bold;"></div>
                         </div>
-                        <button class="btn-yellow" onclick="uploadTrack()">➕ Song hinzufügen</button>
-                        <div id="upload-status" style="margin-top: 10px; font-size: 13px; font-weight: bold;"></div>
                     </div>
                 </div>
             </div>
+
+            <div class="table-section-header">
+                <div class="songs-count-title">🎵 Songs <span class="counter-badge" id="songs-counter">0</span></div>
+                <div class="filter-area">
+                    <input type="text" class="search-input" placeholder="Name, ID, Kategorie...">
+                    <select class="select-filter"><option value="alle">Alle</option></select>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 10px 20px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">#</th>
+                            <th style="width: 50%;">Name</th>
+                            <th style="width: 25%;">Song ID</th>
+                            <th style="width: 20%;">Kategorie</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playlist-body"></tbody>
+                </table>
+            </div>
         </div>
 
-        <div id="page-team" class="page card" style="display:none; margin-bottom: 30px;">
+        <div id="page-upload" class="page card">
+            <h2 style="color:var(--tekk-yellow);">🎵 Audio Manager</h2>
+            <p>Hier kannst du Tracks einspeisen. Bitte nutze das Eingabefeld auf der Startseite ("DJ Console"), sobald du eingeloggt bist.</p>
+        </div>
+
+        <div id="page-categories" class="page card">
+            <h2 style="color:var(--tekk-yellow);">🗂️ Kategorien</h2>
+            <p>Kategorie-Verwaltung wird geladen...</p>
+        </div>
+
+        <div id="page-team" class="page card">
             <div class="card-header">👑 Benutzer & Ränge Verwaltung</div>
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="new-user-name" class="input-field" placeholder="Name" style="margin:0;">
-                <input type="text" id="new-user-pass" class="input-field" placeholder="Passwort" style="margin:0;">
-                <select id="new-user-role" class="input-field" style="margin:0; background-color: var(--bg-input);">
-                    <option value="Admin">Admin</option>
-                    <option value="Moderator">Moderator</option>
-                    <option value="IDs-Manager">IDs-Manager</option>
-                </select>
-                <button class="btn-yellow" style="width: auto; padding: 0 20px;" onclick="createNewUser()">Erstellen</button>
+            <div id="admin-only-content" style="display: none;">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <input type="text" id="new-user-name" class="input-field" placeholder="Name" style="margin:0;">
+                    <input type="text" id="new-user-pass" class="input-field" placeholder="Passwort" style="margin:0;">
+                    <select id="new-user-role" class="input-field" style="margin:0; background-color: var(--bg-input); color:white;">
+                        <option value="Admin">Admin</option>
+                        <option value="Moderator">Moderator</option>
+                        <option value="IDs-Manager">IDs-Manager</option>
+                    </select>
+                    <button class="btn-yellow" style="width: auto; padding: 0 20px;" onclick="createNewUser()">Erstellen</button>
+                </div>
+                <table style="width:100%;">
+                    <thead><tr><th>Name</th><th>Rang</th><th>Aktion</th></tr></thead>
+                    <tbody id="team-body"></tbody>
+                </table>
             </div>
-            <table style="width:100%;">
-                <thead><tr><th>Name</th><th>Rang</th><th>Aktion</th></tr></thead>
-                <tbody id="team-body"></tbody>
-            </table>
+            <p id="admin-lock-text" style="color: var(--text-muted);">Nur für Admins & Owner sichtbar. Bitte logge dich ein.</p>
         </div>
 
-        <div class="table-section-header">
-            <div class="songs-count-title">🎵 Songs <span class="counter-badge" id="songs-counter">0</span></div>
-            <div class="filter-area">
-                <input type="text" class="search-input" placeholder="Name, ID, Kategorie...">
-                <select class="select-filter">
-                    <option value="alle">Alle</option>
-                </select>
-            </div>
+        <div id="page-api" class="page card">
+            <h2 style="color:var(--tekk-yellow);">🌐 Roblox API Schnittstelle</h2>
+            <p>Die API ist unter <code style="color:var(--tekk-yellow);">/api/roblox/songs</code> aktiv und empfängt Anfragen.</p>
         </div>
 
-        <div class="card" style="padding: 10px 20px;">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 5%;">#</th>
-                        <th style="width: 50%;">Name</th>
-                        <th style="width: 25%;">Song ID</th>
-                        <th style="width: 20%;">Kategorie</th>
-                    </tr>
-                </thead>
-                <tbody id="playlist-body">
-                    </tbody>
-            </table>
+        <div id="page-playlist" class="page card">
+            <h2 style="color:var(--tekk-yellow);">📜 Playlists</h2>
+            <p>Deine gespeicherten Playlists werden synchronisiert.</p>
         </div>
+
     </div>
 
     <script src="script.js"></script>
-    <script>
-        // Kleine Erweiterung für das Formular-Umschalten beim Einloggen, 
-        // da das Design jetzt ein bisschen anders aufgebaut ist als vorher.
-        const originalVersucheLogin = versucheLogin;
-        versucheLogin = async function() {
-            await originalVersucheLogin();
-            if (currentUser) {
-                document.getElementById('guest-info-text').style.display = 'none';
-                document.getElementById('secret-upload-fields').style.display = 'block';
-            }
-        };
-        const originalLogout = logout;
-        logout = function() {
-            originalLogout();
-            document.getElementById('guest-info-text').style.display = 'block';
-            document.getElementById('secret-upload-fields').style.display = 'none';
-        };
-        
-        // Playlist Zähler updaten sobald Daten geladen sind
-        const originalLadePlaylist = ladePlaylist;
-        ladePlaylist = async function() {
-            await originalLadePlaylist();
-            const rowsCount = document.getElementById('playlist-body').children.length;
-            document.getElementById('songs-counter').innerText = rowsCount;
-        };
-    </script>
 </body>
 </html>
