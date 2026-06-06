@@ -24,18 +24,26 @@ async function versucheLogin() {
         return;
     }
     
-    errorDiv.innerText = "Lade...";
+    errorDiv.innerText = "Verbindung zum Bunker wird aufgebaut...";
     errorDiv.style.color = "white";
 
     try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/team_users?username=eq.${userIn}&select=*`, {
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
+        
         const data = await res.json();
 
-        if (data.length === 0 || data[0].password !== passIn) {
+        // DIAGNOSE: Falls Supabase einen Fehlercode (z.B. falscher Key oder falsche Tabelle) sendet
+        if (data && data.message) {
             errorDiv.style.color = "#ff3333";
-            errorDiv.innerText = "Falscher Name oder Passwort!";
+            errorDiv.innerText = `Datenbank meldet: ${data.message} (${data.hint || 'Kein Hint'})`;
+            return;
+        }
+
+        if (!Array.isArray(data) || data.length === 0 || data[0].password !== passIn) {
+            errorDiv.style.color = "#ff3333";
+            errorDiv.innerText = "Falscher Benutzername oder Passwort!";
         } else {
             currentUser = data[0];
             closeLoginModal();
@@ -57,8 +65,9 @@ async function versucheLogin() {
             }
         }
     } catch (err) {
+        // DIAGNOSE: Falls das Skript komplett abstürzt (z.B. URL falsch)
         errorDiv.style.color = "#ff3333";
-        errorDiv.innerText = "Verbindungsfehler zur Datenbank.";
+        errorDiv.innerText = "Kritischer Verbindungsfehler: " + err.message;
     }
 }
 
@@ -96,7 +105,6 @@ async function ladePlaylist() {
         const data = await res.json();
         tbody.innerHTML = '';
         
-        // AUTOMATISCHER LIVE-ZÄHLER AUS SUPABASE
         if (Array.isArray(data)) {
             document.getElementById('songs-counter').innerText = data.length;
         } else {
