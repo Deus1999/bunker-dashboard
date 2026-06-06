@@ -15,10 +15,10 @@
             --text-dim: #888888;
             
             /* Ränge Farben */
-            --color-owner: #ffd700; /* Gold */
-            --color-admin: #ff3333; /* Rot */
-            --color-mod: #3399ff;   /* Blau */
-            --color-id: #cc33ff;    /* Lila */
+            --color-owner: #ffd700; 
+            --color-admin: #ff3333; 
+            --color-mod: #3399ff;   
+            --color-id: #cc33ff;    
         }
 
         body {
@@ -95,7 +95,7 @@
         }
         #login-error { color: #ff3333; margin-top: 15px; font-weight: bold; min-height: 20px;}
 
-        /* --- HAUPT APP (VERSTECKT BIS LOGIN) --- */
+        /* --- HAUPT APP --- */
         #app-screen {
             display: none;
             width: 100%;
@@ -105,7 +105,6 @@
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Navigation */
         nav {
             display: flex;
             justify-content: space-between;
@@ -151,7 +150,6 @@
             gap: 8px;
         }
 
-        /* Container & Cards */
         .page { display: none; }
         .page.active { display: block; animation: slideUp 0.4s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -165,20 +163,15 @@
         }
         h2 { margin-top: 0; color: white; display: flex; align-items: center; gap: 10px; }
         
-        /* Tabellen */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #222; }
         th { color: var(--text-dim); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
         tr:hover { background-color: #1a1a1a; }
         .id-badge { background: #000; padding: 4px 8px; border-radius: 4px; font-family: monospace; color: var(--neon-blue); border: 1px solid #333;}
         
-        /* Buttons */
-        .btn-small {
-            background: #333; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;
-        }
+        .btn-small { background: #333; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-small.danger:hover { background: var(--color-admin); }
 
-        /* Rollen Farben */
         .role-owner { color: var(--color-owner); font-weight: bold; }
         .role-admin { color: var(--color-admin); font-weight: bold; }
         .role-mod { color: var(--color-mod); font-weight: bold; }
@@ -187,7 +180,7 @@
 </head>
 <body>
 
-    <!-- ================= LOGIN WAND ================= -->
+    <!-- LOGIN -->
     <div id="login-screen">
         <div class="login-box">
             <h1>Bunker Zentrale</h1>
@@ -198,60 +191,41 @@
         </div>
     </div>
 
-    <!-- ================= HAUPT APP ================= -->
+    <!-- APP -->
     <div id="app-screen">
         <nav>
             <div class="logo">Hardtekk Bunker</div>
             <div class="nav-tabs">
                 <button id="tab-home" class="active" onclick="switchTab('home')">Playlist</button>
                 <button id="tab-upload" onclick="switchTab('upload')">Track Upload</button>
-                <!-- Der Team Tab wird nur für Owner/Admin per JavaScript sichtbar gemacht -->
                 <button id="tab-team" onclick="switchTab('team')" style="display: none; color: var(--neon-purple);">Team Verwaltung</button>
             </div>
-            <div class="user-badge" id="display-user">
-                <!-- Wird per JS gefüllt -->
-            </div>
+            <div class="user-badge" id="display-user"></div>
         </nav>
 
-        <!-- SEITE 1: PLAYLIST -->
         <div id="page-home" class="page active card">
             <h2>🎵 Bunker Datenbank</h2>
             <table id="playlist-table">
-                <thead>
-                    <tr>
-                        <th>Hochgeladen von</th>
-                        <th>Künstler</th>
-                        <th>Titel</th>
-                        <th>Roblox ID</th>
-                    </tr>
-                </thead>
-                <tbody id="playlist-body">
-                    <!-- Tracks laden hier -->
-                </tbody>
+                <thead><tr><th>Hochgeladen von</th><th>Künstler</th><th>Titel</th><th>Roblox ID</th></tr></thead>
+                <tbody id="playlist-body"></tbody>
             </table>
         </div>
 
-        <!-- SEITE 2: UPLOAD -->
         <div id="page-upload" class="page card">
             <h2>⚡ Neuen Track einspeisen</h2>
-            <p style="color: var(--text-dim); margin-bottom: 20px;">Dein Name und Rang werden automatisch als Uploader gespeichert.</p>
-            
-            <input type="text" id="up-artist" class="input-field" placeholder="Künstler / DJ (z.B. Nogge)">
-            <input type="text" id="up-title" class="input-field" placeholder="Songtitel (z.B. Tekk-Gewitter)">
-            <input type="text" id="up-id" class="input-field" placeholder="Roblox Audio ID (z.B. 183749201)">
-            
+            <input type="text" id="up-artist" class="input-field" placeholder="Künstler / DJ">
+            <input type="text" id="up-title" class="input-field" placeholder="Songtitel">
+            <input type="text" id="up-id" class="input-field" placeholder="Roblox Audio ID">
             <button class="btn-main" onclick="uploadTrack()">Track Hochladen</button>
             <div id="upload-status" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
         </div>
 
-        <!-- SEITE 3: TEAM (Nur Owner/Admin) -->
         <div id="page-team" class="page card">
             <h2>👑 Team & Rollen Verwaltung</h2>
-            
             <div style="background: #000; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #333;">
                 <h3 style="margin-top: 0; color: var(--neon-blue);">Neuen Zugang erstellen</h3>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="new-user-name" class="input-field" placeholder="Benutzername" style="margin:0;">
+                    <input type="text" id="new-user-name" class="input-field" placeholder="Name" style="margin:0;">
                     <input type="text" id="new-user-pass" class="input-field" placeholder="Passwort" style="margin:0;">
                     <select id="new-user-role" class="input-field" style="margin:0;">
                         <option value="Admin">⚡ Admin</option>
@@ -262,32 +236,19 @@
                 </div>
                 <div id="team-status" style="margin-top: 10px; color: #00ff66; font-weight: bold;"></div>
             </div>
-
             <table>
-                <thead>
-                    <tr>
-                        <th>Benutzername</th>
-                        <th>Rang</th>
-                        <th>Aktion</th>
-                    </tr>
-                </thead>
-                <tbody id="team-body">
-                    <!-- User laden hier -->
-                </tbody>
+                <thead><tr><th>Benutzername</th><th>Rang</th><th>Aktion</th></tr></thead>
+                <tbody id="team-body"></tbody>
             </table>
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT LOGIK ================= -->
+    <!-- HIER IST DAS JAVASCRIPT! -->
     <script>
-        // Supabase Daten
         const SUPABASE_URL = "https://xyzbjnxrhzdcxuuwfvuq.supabase.co";
         const SUPABASE_KEY = "sb_publishable_Kp5QnlVPRhgGm221Iz1b6Q_wHcdXmKH";
-        
-        // Aktueller Benutzer, der eingeloggt ist
         let currentUser = null;
 
-        // Hilfsfunktion für Rollen-Formatierung
         function formatRole(role) {
             if (role === 'Owner') return '<span class="role-owner">👑 Owner</span>';
             if (role === 'Admin') return '<span class="role-admin">⚡ Admin</span>';
@@ -296,207 +257,116 @@
             return role;
         }
 
-        // --- 1. LOGIN SYSTEM ---
         async function versucheLogin() {
             const userIn = document.getElementById('login-username').value.trim();
             const passIn = document.getElementById('login-password').value.trim();
             const errorDiv = document.getElementById('login-error');
 
-            if (!userIn || !passIn) {
-                errorDiv.innerText = "Bitte Name und Passwort eingeben!";
-                return;
-            }
-
-            errorDiv.style.color = "white";
-            errorDiv.innerText = "Überprüfe Datenbank...";
+            if (!userIn || !passIn) return errorDiv.innerText = "Bitte Daten eingeben!";
+            errorDiv.innerText = "Lade...";
 
             try {
-                // Suche in Supabase nach dem Namen
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/team_users?username=eq.${userIn}&select=*`, {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/team_users?username=eq.${userIn}&select=*`, {
                     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
-                
-                const data = await response.json();
+                const data = await res.json();
 
-                if (data.length === 0) {
-                    errorDiv.style.color = "#ff3333";
-                    errorDiv.innerText = "Benutzer nicht gefunden.";
-                } else if (data[0].password !== passIn) {
-                    errorDiv.style.color = "#ff3333";
-                    errorDiv.innerText = "Falsches Passwort!";
+                if (data.length === 0 || data[0].password !== passIn) {
+                    errorDiv.innerText = "Falscher Name oder Passwort!";
                 } else {
-                    // LOGIN ERFOLGREICH!
                     currentUser = data[0];
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-screen').style.display = 'block';
-                    
-                    // User Badge oben rechts füllen
-                    document.getElementById('display-user').innerHTML = `
-                        ${formatRole(currentUser.role)} | <b>${currentUser.username}</b>
-                    `;
-
-                    // Prüfen, ob der Team-Tab angezeigt werden darf
+                    document.getElementById('display-user').innerHTML = `${formatRole(currentUser.role)} | <b>${currentUser.username}</b>`;
                     if (currentUser.role === 'Owner' || currentUser.role === 'Admin') {
                         document.getElementById('tab-team').style.display = 'inline-block';
-                        ladeTeam(); // Lade Team-Liste
+                        ladeTeam();
                     }
-
-                    // Playlist sofort laden
                     ladePlaylist();
                 }
             } catch (err) {
-                errorDiv.style.color = "#ff3333";
                 errorDiv.innerText = "Verbindungsfehler zur Datenbank.";
             }
         }
 
-        // --- 2. TAB NAVIGATION ---
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
-            
             document.getElementById('page-' + tabId).classList.add('active');
             document.getElementById('tab-' + tabId).classList.add('active');
-
             if (tabId === 'home') ladePlaylist();
             if (tabId === 'team') ladeTeam();
         }
 
-        // --- 3. PLAYLIST LADEN ---
         async function ladePlaylist() {
             const tbody = document.getElementById('playlist-body');
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/playlist?order=id.desc`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/playlist?order=id.desc`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
                 const data = await res.json();
                 tbody.innerHTML = '';
-                
                 data.forEach(song => {
-                    // Zeigt den Namen des Uploaders aus der Datenbank
-                    tbody.innerHTML += `<tr>
-                        <td style="color:#aaa;">${song.role || 'Unbekannt'}</td>
-                        <td style="font-weight:bold; color:white;">${song.artist}</td>
-                        <td>${song.title}</td>
-                        <td><span class="id-badge">${song.audio_id}</span></td>
-                    </tr>`;
+                    tbody.innerHTML += `<tr><td style="color:#aaa;">${song.role || 'Unbekannt'}</td><td style="font-weight:bold; color:white;">${song.artist}</td><td>${song.title}</td><td><span class="id-badge">${song.audio_id}</span></td></tr>`;
                 });
-            } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="4">Fehler beim Laden.</td></tr>';
-            }
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="4">Fehler beim Laden.</td></tr>'; }
         }
 
-        // --- 4. TRACK HOCHLADEN ---
         async function uploadTrack() {
             const artist = document.getElementById('up-artist').value;
             const title = document.getElementById('up-title').value;
             const audioId = document.getElementById('up-id').value;
             const statusDiv = document.getElementById('upload-status');
+            if (!artist || !title || !audioId) { statusDiv.style.color = "#ff3333"; statusDiv.innerText = "Alle Felder ausfüllen!"; return; }
 
-            if (!artist || !title || !audioId) {
-                statusDiv.style.color = "#ff3333";
-                statusDiv.innerText = "Alle Felder ausfüllen!";
-                return;
-            }
-
-            statusDiv.style.color = "white";
-            statusDiv.innerText = "Lädt hoch...";
-
-            // Wir speichern den Namen + Rang des aktuell eingeloggten Nutzers
+            statusDiv.style.color = "white"; statusDiv.innerText = "Lädt hoch...";
             const uploaderInfo = `${currentUser.username} (${currentUser.role})`;
 
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/playlist`, {
                     method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
-                    },
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
                     body: JSON.stringify({ role: uploaderInfo, artist: artist, title: title, audio_id: audioId })
                 });
-
                 if (res.ok) {
-                    statusDiv.style.color = "#00ff66";
-                    statusDiv.innerText = "Track erfolgreich hinzugefügt!";
-                    document.getElementById('up-artist').value = '';
-                    document.getElementById('up-title').value = '';
-                    document.getElementById('up-id').value = '';
+                    statusDiv.style.color = "#00ff66"; statusDiv.innerText = "Track live!";
+                    document.getElementById('up-artist').value = ''; document.getElementById('up-title').value = ''; document.getElementById('up-id').value = '';
                 }
-            } catch (e) {
-                statusDiv.style.color = "#ff3333";
-                statusDiv.innerText = "Fehler beim Upload.";
-            }
+            } catch (e) { statusDiv.style.color = "#ff3333"; statusDiv.innerText = "Fehler beim Upload."; }
         }
 
-        // --- 5. TEAM VERWALTUNG (Nur Owner/Admin) ---
         async function ladeTeam() {
             const tbody = document.getElementById('team-body');
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/team_users?order=role.asc`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/team_users?order=role.asc`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
                 const data = await res.json();
                 tbody.innerHTML = '';
-                
                 data.forEach(user => {
-                    // Owner dürfen nicht gelöscht werden
-                    let actionBtn = '';
-                    if (user.role !== 'Owner') {
-                        actionBtn = `<button class="btn-small danger" onclick="deleteUser(${user.id}, '${user.username}')">Löschen</button>`;
-                    }
-
-                    tbody.innerHTML += `<tr>
-                        <td style="font-weight:bold; color:white;">${user.username}</td>
-                        <td>${formatRole(user.role)}</td>
-                        <td>${actionBtn}</td>
-                    </tr>`;
+                    let actionBtn = user.role !== 'Owner' ? `<button class="btn-small danger" onclick="deleteUser(${user.id}, '${user.username}')">Löschen</button>` : '';
+                    tbody.innerHTML += `<tr><td style="font-weight:bold; color:white;">${user.username}</td><td>${formatRole(user.role)}</td><td>${actionBtn}</td></tr>`;
                 });
-            } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="3">Fehler beim Laden.</td></tr>';
-            }
+            } catch (e) {}
         }
 
         async function createNewUser() {
             const name = document.getElementById('new-user-name').value;
             const pass = document.getElementById('new-user-pass').value;
             const role = document.getElementById('new-user-role').value;
-            const statusDiv = document.getElementById('team-status');
-
             if (!name || !pass) return;
-
             try {
                 await fetch(`${SUPABASE_URL}/rest/v1/team_users`, {
                     method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
-                    },
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
                     body: JSON.stringify({ username: name, password: pass, role: role })
                 });
-                
-                statusDiv.innerText = "Account erstellt!";
-                document.getElementById('new-user-name').value = '';
-                document.getElementById('new-user-pass').value = '';
-                ladeTeam(); // Liste aktualisieren
-                
-                setTimeout(() => statusDiv.innerText = '', 3000);
-            } catch (e) {
-                alert("Fehler beim Erstellen!");
-            }
+                document.getElementById('new-user-name').value = ''; document.getElementById('new-user-pass').value = ''; ladeTeam();
+            } catch (e) {}
         }
 
         async function deleteUser(id, name) {
-            if (!confirm(`Willst du den Account '${name}' wirklich löschen?`)) return;
-
+            if (!confirm(`Account '${name}' löschen?`)) return;
             try {
-                await fetch(`${SUPABASE_URL}/rest/v1/team_users?id=eq.${id}`, {
-                    method: 'DELETE',
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
-                ladeTeam(); // Liste aktualisieren
-            } catch (e) {
-                alert("Fehler beim Löschen!");
-            }
+                await fetch(`${SUPABASE_URL}/rest/v1/team_users?id=eq.${id}`, { method: 'DELETE', headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+                ladeTeam();
+            } catch (e) {}
         }
     </script>
 </body>
