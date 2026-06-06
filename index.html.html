@@ -111,6 +111,7 @@
 </nav>
 
 <div class="container">
+    <!-- HOME PAGE (PLAYLIST) -->
     <div id="home" class="page active card">
         <h2>Aktuelle Playlist</h2>
         <p style="color: var(--text-muted); margin-bottom: 20px;">Hier siehst du alle Tracks, die live auf dem Server verfügbar sind.</p>
@@ -129,8 +130,10 @@
         </table>
     </div>
 
+    <!-- DASHBOARD PAGE (UPLOAD) -->
     <div id="dashboard" class="page card">
         <h2>Neuen Track einspeisen</h2>
+        
         <div class="form-group">
             <label>Dein Rang</label>
             <select id="role">
@@ -139,27 +142,37 @@
                 <option value="Owner">Owner</option>
             </select>
         </div>
+        
         <div class="form-group">
             <label>Künstler / DJ</label>
             <input type="text" id="artist" placeholder="z.B. Nogge">
         </div>
+        
         <div class="form-group">
             <label>Songtitel</label>
             <input type="text" id="title" placeholder="z.B. Tekk-Gewitter">
         </div>
+        
         <div class="form-group">
             <label>Roblox Audio ID</label>
             <input type="text" id="audioId" placeholder="z.B. 183749201">
         </div>
+
+        <div class="form-group">
+            <label>Manager Passwort</label>
+            <input type="password" id="password" placeholder="Sicherheitscode eingeben">
+        </div>
+
         <button class="btn-upload" onclick="uploadSong()">Track in den Bunker laden</button>
         <div id="status"></div>
     </div>
 </div>
 
 <script>
-    // ⚠️ DEINE SUPABASE DATEN HIER EINTRAGEN!
-    const SUPABASE_URL = "DEINE_SUPABASE_URL";
-    const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY";
+    // Hier stehen deine Links und das Passwort jetzt sicher im Code!
+    const SUPABASE_URL = "https://xyzbjnxrhzdcxuuwfvuq.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_Kp5QnlVPRhgGm221Iz1b6Q_wHcdXmKH";
+    const MANAGER_PASSWORD = "671999";
 
     // --- Navigation ---
     function switchPage(pageId) {
@@ -169,7 +182,7 @@
         document.getElementById(pageId).classList.add('active');
         if (pageId === 'home') {
             document.getElementById('nav-home').classList.add('active');
-            loadPlaylist(); // Aktualisiere die Liste, wenn man auf Home klickt
+            loadPlaylist(); 
         } else {
             document.getElementById('nav-dash').classList.add('active');
         }
@@ -190,7 +203,7 @@
 
             if (response.ok) {
                 const data = await response.json();
-                tbody.innerHTML = ''; // Alte Liste löschen
+                tbody.innerHTML = ''; 
 
                 if (data.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Die Playlist ist noch leer!</td></tr>';
@@ -218,11 +231,19 @@
         const artist = document.getElementById('artist').value;
         const title = document.getElementById('title').value;
         const audioId = document.getElementById('audioId').value;
+        const passwordInput = document.getElementById('password').value;
         const statusDiv = document.getElementById('status');
 
-        if (!artist || !title || !audioId) {
+        if (!artist || !title || !audioId || !passwordInput) {
             statusDiv.className = "error";
             statusDiv.innerText = "Bitte alle Felder ausfüllen!";
+            return;
+        }
+
+        // Passwort Check!
+        if (passwordInput !== MANAGER_PASSWORD) {
+            statusDiv.className = "error";
+            statusDiv.innerText = "Falsches Manager Passwort!";
             return;
         }
 
@@ -247,6 +268,7 @@
                 document.getElementById('artist').value = '';
                 document.getElementById('title').value = '';
                 document.getElementById('audioId').value = '';
+                document.getElementById('password').value = '';
             } else {
                 statusDiv.className = "error";
                 statusDiv.innerText = "Fehler beim Hochladen.";
@@ -260,9 +282,6 @@
     // Lade die Liste sofort beim Starten der Seite
     loadPlaylist();
 </script>
-const SUPABASE_URL = "https://xyzbjnxrhzdcxuuwfvuq.supabase.co/rest/v1/";
-const SUPABASE_ANON_KEY = "sb_publishable_Kp5QnIVPRhgGm221Iz1b6Q_wHcdXmKH";
-const MANAGER_PASSWORD = "671999";
 
 </body>
 </html>
